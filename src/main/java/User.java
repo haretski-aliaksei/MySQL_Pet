@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class User {
+    private int userId;
     private String name;
     private String address;
 
@@ -19,27 +20,11 @@ public class User {
                 pstmt.setString(2, address);
                 pstmt.executeUpdate();
 
-                System.out.println("User is added");
+                System.out.println("User is created");
             }
         } catch (Exception ex) {
             System.out.println("Connection to database failed...");
             System.out.println(ex);
         }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 }
