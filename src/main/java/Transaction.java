@@ -1,7 +1,6 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 public class Transaction {
     private int transactionId;
@@ -9,21 +8,7 @@ public class Transaction {
     private int amount;
 
     public void replenishmentBalance(int inputAccountId, int inputAmount) {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-            String sqlCommandTransaction = "INSERT INTO transactions(accountId, amount) VALUES (?, ?)";
-            try (Connection conn = DatabaseConnection.getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement(sqlCommandTransaction)) {
-
-                pstmt.setInt(1, inputAccountId);
-                pstmt.setInt(2, inputAmount);
-                pstmt.executeUpdate();
-                System.out.println("Transaction is processed");
-            }
-        } catch (Exception ex) {
-            System.out.println("Connection to database failed...");
-            System.out.println(ex);
-        }
+        processTransaction(inputAccountId, inputAmount);
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
@@ -52,21 +37,7 @@ public class Transaction {
     }
 
     public void withdrawalFromBalance(int inputAccountId, int inputAmount) {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-            String sqlCommandTransaction = "INSERT INTO transactions(accountId, amount) VALUES (?, ?)";
-            try (Connection conn = DatabaseConnection.getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement(sqlCommandTransaction)) {
-
-                pstmt.setInt(1, inputAccountId);
-                pstmt.setInt(2, inputAmount);
-                pstmt.executeUpdate();
-                System.out.println("Transaction is processed");
-            }
-        } catch (Exception ex) {
-            System.out.println("Connection to database failed...");
-            System.out.println(ex);
-        }
+        processTransaction(inputAccountId, inputAmount);
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
@@ -87,6 +58,24 @@ public class Transaction {
                 }
 
                 System.out.println("Balance is updated");
+            }
+        } catch (Exception ex) {
+            System.out.println("Connection to database failed...");
+            System.out.println(ex);
+        }
+    }
+
+    private void processTransaction(int inputAccountId, int inputAmount) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            String sqlCommandTransaction = "INSERT INTO transactions(accountId, amount) VALUES (?, ?)";
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement pstmt = conn.prepareStatement(sqlCommandTransaction)) {
+
+                pstmt.setInt(1, inputAccountId);
+                pstmt.setInt(2, inputAmount);
+                pstmt.executeUpdate();
+                System.out.println("Transaction is processed");
             }
         } catch (Exception ex) {
             System.out.println("Connection to database failed...");
