@@ -8,6 +8,11 @@ public class Transaction {
     private int amount;
 
     public void replenishmentBalance(int inputAccountId, int inputAmount) {
+        if (inputAmount >= 100_000_000) {
+            System.out.println("Maximum transaction size exceeded (MAX = 100.000.000)");
+            return;
+        }
+
         processTransaction(inputAccountId, inputAmount);
 
         try {
@@ -37,6 +42,11 @@ public class Transaction {
     }
 
     public void withdrawalFromBalance(int inputAccountId, int inputAmount) {
+        if (inputAmount >= 100_000_000) {
+            System.out.println("Maximum transaction size exceeded (MAX = 100.000.000)");
+            return;
+        }
+
         processTransaction(inputAccountId, inputAmount);
 
         try {

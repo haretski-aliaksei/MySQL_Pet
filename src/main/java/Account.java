@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class Account {
     private int accountId;
@@ -7,21 +8,35 @@ public class Account {
     private int balance;
     private String currency;
 
-    public Account(int userId, int balance, String currency) {
-        this.userId = userId;
-        this.balance = balance;
-        this.currency = currency;
+    public Account(int inputUserId, int inputBalance, String inputCurrency) {
+        this.userId = inputUserId;
+        this.balance = inputBalance;
+        this.currency = inputCurrency;
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-            String sqlCommand = "INSERT INTO accounts(userId, balance, currency) VALUES (?, ?, ?)";
+            String sqlCommandCreateUser = "INSERT INTO accounts(userId, balance, currency) VALUES (?, ?, ?)";
+            String sqlCommandCheckCurrency = "SELECT userid, currency FROM accounts WHERE userid=?";
             try (Connection conn = DatabaseConnection.getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement(sqlCommand)) {
+                 PreparedStatement pstmtCreateUser = conn.prepareStatement(sqlCommandCreateUser);
+                 PreparedStatement pstmtCheckCurrency = conn.prepareStatement(sqlCommandCheckCurrency)) {
 
-                pstmt.setInt(1, userId);
-                pstmt.setInt(2, balance);
-                pstmt.setString(3, currency);
-                pstmt.executeUpdate();
+                pstmtCheckCurrency.setInt(1, inputUserId);
+                ResultSet resultSet = pstmtCheckCurrency.executeQuery();
+
+                while (resultSet.next()) {
+                    String existedCurrency = resultSet.getString("currency");
+
+                    if (existedCurrency.equals(inputCurrency)) {
+                        System.out.println("This user already has an account with this currency");
+                        return;
+                    }
+                }
+
+                pstmtCreateUser.setInt(1, inputUserId);
+                pstmtCreateUser.setInt(2, inputBalance);
+                pstmtCreateUser.setString(3, inputCurrency);
+                pstmtCreateUser.executeUpdate();
 
                 System.out.println("Account is created");
             }
