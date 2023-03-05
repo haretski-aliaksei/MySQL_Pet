@@ -1,4 +1,4 @@
-# MySQL_Pet
+# MySQL_Pet_Project
 
 This is a pet project that can be used for training:
 * creating, editing, deleting tables in the database;
@@ -45,3 +45,7 @@ CREATE TABLE transactions (
 	FOREIGN KEY (accountId) REFERENCES accounts (accountid)	
 );
 ```
+
+---
+### Database Schema
+Click [here](https://drive.google.com/file/d/1wjj9mjF_qgc6dLr7YDHIngZGSVPlxGhL/view?usp=share_link) to see.
