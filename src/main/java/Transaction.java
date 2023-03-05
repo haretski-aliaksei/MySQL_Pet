@@ -13,6 +13,12 @@ public class Transaction {
             return;
         }
 
+        int currentUserBalance = getCurrentBalance(inputAccountId);
+        if ((currentUserBalance + inputAmount) > 2_000_000_000) {
+            System.out.println("Balance can't be more than \"2_000_000_000\"");
+            return;
+        }
+
         processTransaction(inputAccountId, inputAmount);
 
         try {
@@ -44,6 +50,12 @@ public class Transaction {
     public void withdrawalFromBalance(int inputAccountId, int inputAmount) {
         if (inputAmount >= 100_000_000) {
             System.out.println("Maximum transaction size exceeded (MAX = 100.000.000)");
+            return;
+        }
+
+        int currentUserBalance = getCurrentBalance(inputAccountId);
+        if ((currentUserBalance - inputAmount) <= 0) {
+            System.out.println("Balance can't be less than \"0\"");
             return;
         }
 
@@ -91,5 +103,30 @@ public class Transaction {
             System.out.println("Connection to database failed...");
             System.out.println(ex);
         }
+    }
+
+    private int getCurrentBalance(int inputAccountId) {
+        int currentBalance = 0;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            String sqlCommandSelectBalance = "SELECT balance FROM accounts WHERE accountid=?";
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement pstmt = conn.prepareStatement(sqlCommandSelectBalance)) {
+
+                pstmt.setInt(1, inputAccountId);
+                ResultSet resultSet = pstmt.executeQuery();
+
+                while (resultSet.next()) {
+                    currentBalance = resultSet.getInt("balance");
+                }
+
+            }
+        } catch (Exception ex) {
+            System.out.println("Connection to database failed...");
+            System.out.println(ex);
+        }
+
+        return currentBalance;
     }
 }

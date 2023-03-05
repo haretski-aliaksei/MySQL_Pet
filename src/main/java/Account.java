@@ -13,6 +13,11 @@ public class Account {
         this.balance = inputBalance;
         this.currency = inputCurrency;
 
+        if (inputBalance <= 0 || inputBalance > 2_000_000_000){
+            System.out.println("Balance should be more than \"0\" and less or equal \"2_000_000_000\"");
+            return;
+        }
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             String sqlCommandCreateUser = "INSERT INTO accounts(userId, balance, currency) VALUES (?, ?, ?)";
@@ -44,5 +49,9 @@ public class Account {
             System.out.println("Connection to database failed...");
             System.out.println(ex);
         }
+    }
+
+    private void checkMinMaxBalance(int inputBalance) {
+
     }
 }
