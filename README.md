@@ -21,7 +21,7 @@ CREATE DATABASE [IF NOT EXISTS] database_name;
 CREATE TABLE users (                                      
     userid INT(10) PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
-    address VARCHAR(255)
+    address VARCHAR(255) DEFAULT 'undefined'
 );
 ```
 
